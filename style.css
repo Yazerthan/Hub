@@ -1,0 +1,308 @@
+:root {
+    --bg-color: #0a0a0c;
+    --terminal-bg: rgba(18, 18, 22, 0.85);
+    --text-primary: #e0e0e6;
+    --text-dim: #888891;
+    --accent: #ff3e3e; /* Red accent as per user's previous preference in Potion site */
+    --prompt-color: #4ade80;
+    --dir-color: #60a5fa;
+    --loader-glow: rgba(255, 62, 62, 0.3);
+    --terminal-glow: rgba(224, 224, 230, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-color);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+}
+
+/* Loading Screen */
+.loader-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.loader-screen.hide {
+    transform: translateY(-100%);
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-content h1 {
+    font-weight: 300;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    margin-top: 2rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--accent);
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 15px var(--loader-glow);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Terminal Styles */
+#main-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: radial-gradient(circle at center, #1a1a20 0%, #0a0a0c 100%);
+}
+
+.terminal-container {
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    background: var(--terminal-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-header {
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.terminal-header .buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.terminal-header .buttons span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.close { background: #ff5f57; }
+.minimize { background: #febc2e; }
+.maximize { background: #28c840; }
+
+.terminal-header .title {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    pointer-events: none;
+    font-family: 'Fira Code', monospace;
+}
+
+.terminal-body {
+    flex: 1;
+    padding: 1.5rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Scanline Effect */
+.terminal-body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    z-index: 2;
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.terminal-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px var(--terminal-glow);
+    word-break: break-all;
+}
+
+.prompt {
+    color: var(--prompt-color);
+    margin-right: 12px;
+    font-weight: 500;
+}
+
+.command {
+    color: var(--text-primary);
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background: var(--text-primary);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.output-line {
+    margin-bottom: 0.5rem;
+    color: var(--text-dim);
+    white-space: pre-wrap;
+}
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 1rem;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    text-decoration: none;
+    color: var(--dir-color);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+}
+
+.project-item:hover {
+    color: var(--prompt-color);
+    transform: translateX(5px);
+}
+
+.project-item::before {
+    content: "drwxr-xr-x  2 nathan nathan  4096 ";
+    color: var(--text-dim);
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.project-date {
+    color: var(--text-dim);
+    margin-right: 1rem;
+    font-size: 0.85rem;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+    #main-content {
+        padding: 1rem;
+    }
+    
+    .terminal-container {
+        height: 80vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .terminal-header .title {
+        display: none;
+    }
+    
+    .terminal-body {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .prompt {
+        margin-right: 8px;
+    }
+    
+    /* Hide the detailed permissions on very small screens to save space */
+    .project-item::before {
+        content: "drw- ";
+    }
+    
+    .project-date {
+        margin-right: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .loader-content h1 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-height: 500px) {
+    .terminal-container {
+        height: 90vh;
+    }
+    .terminal-body {
+        padding: 0.8rem;
+    }
+}

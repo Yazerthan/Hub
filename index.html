@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub - Nathan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader-screen" class="loader-screen">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <h1>Lancement de l'application</h1>
+        </div>
+    </div>
+
+    <!-- Main Content (Terminal) -->
+    <main id="main-content">
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="buttons">
+                    <span class="close"></span>
+                    <span class="minimize"></span>
+                    <span class="maximize"></span>
+                </div>
+                <div class="title">nathan@hub: ~</div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="terminal-line" id="line-1">
+                    <span class="prompt">nathan@hub:~$</span>
+                    <span class="command" id="command-1"></span>
+                    <span class="cursor"></span>
+                </div>
+                <div id="terminal-output"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

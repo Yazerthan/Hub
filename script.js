@@ -1,9 +1,9 @@
 const projects = [
-    { name: "potion-app", url: "#", date: "Apr 29 10:12" },
-    { name: "marketing-site", url: "#", date: "Apr 28 15:45" },
-    { name: "e-commerce-portal", url: "#", date: "Apr 25 09:30" },
-    { name: "portfolio-v3", url: "#", date: "Apr 20 18:20" },
-    { name: "dashboard-analytics", url: "#", date: "Apr 15 11:05" }
+    { name: "Portfolio", url: "https://portfolio.nathan-baud.fr", date: "Apr 28 15:45", comment: "Mon portfolio personnel et ma présentation" },
+    { name: "Timeline", url: "https://timeline.nathan-baud.fr", date: "Apr 25 09:30", comment: "Une application React inspirée du jeu Timeline" },
+    { name: "AimTrainer", url: "https://trainer.nathan-baud.fr", date: "Apr 20 18:20", comment: "Une petite application web pour entraîner sa visée" },
+    { name: "Potion", url: "https://potion.nathan-baud.fr", date: "Apr 29 10:12", comment: "Application mobile pour le fitness et la nutrition" },
+    { name: "FlashXSL", url: "https://xml.nathan-baud.fr", date: "Apr 15 11:05", comment: "Outil de transformation XSL rapide et efficace" }
 ];
 
 const terminalBody = document.getElementById('terminal-body');
@@ -48,6 +48,7 @@ async function startSequence() {
     // 1. On attend que le loader finisse
     await new Promise(resolve => setTimeout(resolve, 2500));
     loaderScreen.classList.add('hide');
+    document.getElementById('main-content').classList.add('visible');
 
     // On attend un tout petit peu 
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -82,14 +83,22 @@ async function startSequence() {
         const dateSpan = document.createElement('span');
         dateSpan.className = 'project-date';
         dateSpan.textContent = project.date;
-        
+
         const nameSpan = document.createElement('span');
         nameSpan.textContent = project.name;
-        
+
         item.appendChild(dateSpan);
         item.appendChild(nameSpan);
 
         output.appendChild(item);
+
+        // Add comment if it exists
+        if (project.comment) {
+            const commentLine = document.createElement('div');
+            commentLine.className = 'project-comment';
+            commentLine.textContent = `# ${project.comment}`;
+            output.appendChild(commentLine);
+        }
     });
 
     terminalBody.appendChild(output);

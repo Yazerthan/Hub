@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div id="loader-screen" class="loader-screen">
@@ -20,26 +24,72 @@
 
     <!-- Main Content (Terminal) -->
     <main id="main-content">
-        <div class="terminal-container">
-            <div class="terminal-header">
-                <div class="buttons">
-                    <span class="close"></span>
-                    <span class="minimize"></span>
-                    <span class="maximize"></span>
+        <div class="cathodic-wrapper">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="buttons">
+                        <span class="close"></span>
+                        <span class="minimize"></span>
+                        <span class="maximize"></span>
+                    </div>
+                    <div class="title">nathan@hub: ~</div>
                 </div>
-                <div class="title">nathan@hub: ~</div>
+                <div class="terminal-body" id="terminal-body">
+                    <div class="terminal-line" id="line-1">
+                        <span class="prompt">nathan@hub:~$</span>
+                        <span class="command" id="command-1"></span>
+                        <span class="cursor"></span>
+                    </div>
+                    <div id="terminal-output"></div>
+                </div> <!-- Fin terminal-container -->
             </div>
-            <div class="terminal-body" id="terminal-body">
-                <div class="terminal-line" id="line-1">
-                    <span class="prompt">nathan@hub:~$</span>
-                    <span class="command" id="command-1"></span>
-                    <span class="cursor"></span>
-                </div>
-                <div id="terminal-output"></div>
-            </div>
-        </div>
+            <div class="cathodic-frame"></div>
+        </div> <!-- Fin cathodic-wrapper -->
     </main>
 
     <script src="script.js"></script>
+
+    <!-- CRT Filters -->
+    <svg style="display: none;">
+        <!-- Real Fisheye Bulge Distortion (Symmetric Spherical) -->
+        <filter id="real-fisheye" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+            <!-- 1. Create a neutral gray base (0.5, 0.5, 0) -->
+            <feFlood flood-color="#7f7f7f" result="neutral" />
+
+            <!-- 2. Create Horizontal Gradient (Red) - 300px -->
+            <feImage
+                xlink:href="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22300%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3ClinearGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23000%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20fill%3D%22url(%23g)%22%2F%3E%3C%2Fsvg%3E"
+                result="horiz_grad" />
+
+            <!-- 3. Create Vertical Gradient (Green) - 300px -->
+            <feImage
+                xlink:href="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22300%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3ClinearGradient%20id%3D%22g%22%20gradientTransform%3D%22rotate(90)%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23000%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20fill%3D%22url(%23g)%22%2F%3E%3C%2Fsvg%3E"
+                result="vert_grad" />
+
+            <!-- 4. Create Radial Mask - 300px -->
+            <feImage
+                xlink:href="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22300%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3CradialGradient%20id%3D%22g%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23fff%22%2F%3E%3Cstop%20offset%3D%2230%25%22%20stop-color%3D%22%23fff%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23000%22%2F%3E%3C%2FradialGradient%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20fill%3D%22url(%23g)%22%2F%3E%3C%2Fsvg%3E"
+                result="radial_mask" />
+
+            <!-- 5. Compute Symmetric Displacement -->
+            <feComposite in="horiz_grad" in2="radial_mask" operator="arithmetic" k1="1" k2="0" k3="-0.5" k4="0.5"
+                result="final_x_map" />
+            <feComposite in="vert_grad" in2="radial_mask" operator="arithmetic" k1="1" k2="0" k3="-0.5" k4="0.5"
+                result="final_y_map" />
+
+            <!-- 6. Combine X and Y maps into one -->
+            <feColorMatrix in="final_x_map" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+                result="x_only" />
+            <feColorMatrix in="final_y_map" type="matrix" values="0 0 0 0 0  1 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+                result="y_only" />
+            <feComposite in="x_only" in2="y_only" operator="arithmetic" k2="1" k3="1" result="final_map" />
+
+            <feDisplacementMap in="SourceGraphic" in2="final_map" scale="-70" xChannelSelector="R"
+                yChannelSelector="G" />
+        </filter>
+    </svg>
 </body>
+</svg>
+</body>
+
 </html>

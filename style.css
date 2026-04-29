@@ -3,7 +3,7 @@
     --terminal-bg: rgba(18, 18, 22, 0.85);
     --text-primary: #e0e0e6;
     --text-dim: #888891;
-    --accent: #ff3e3e; /* Red accent as per user's previous preference in Potion site */
+    --accent: #ff3e3e;
     --prompt-color: #4ade80;
     --dir-color: #60a5fa;
     --loader-glow: rgba(255, 62, 62, 0.3);
@@ -16,7 +16,8 @@
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -36,7 +37,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 9999;
     transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
@@ -62,21 +63,33 @@ body, html {
     width: 50px;
     height: 50px;
     border: 3px solid rgba(255, 255, 255, 0.1);
-    border-top: 3px solid var(--accent);
+    border-top: 3px solid var(--prompt-color);
     border-radius: 50%;
     margin: 0 auto;
     animation: spin 1s linear infinite;
-    box-shadow: 0 0 15px var(--loader-glow);
+    box-shadow: 0 0 15px var(--prompt-color);
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
 }
 
 /* Terminal Styles */
@@ -88,6 +101,19 @@ body, html {
     align-items: center;
     padding: 2rem;
     background: radial-gradient(circle at center, #1a1a20 0%, #0a0a0c 100%);
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+#main-content.visible {
+    opacity: 1;
+}
+
+.cathodic-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .terminal-container {
@@ -125,9 +151,17 @@ body, html {
     border-radius: 50%;
 }
 
-.close { background: #ff5f57; }
-.minimize { background: #febc2e; }
-.maximize { background: #28c840; }
+.close {
+    background: #ff5f57;
+}
+
+.minimize {
+    background: #febc2e;
+}
+
+.maximize {
+    background: #28c840;
+}
 
 .terminal-header .title {
     position: absolute;
@@ -195,8 +229,15 @@ body, html {
 }
 
 @keyframes blink {
-    from, to { opacity: 1; }
-    50% { opacity: 0; }
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 .output-line {
@@ -241,6 +282,15 @@ body, html {
     font-size: 0.85rem;
 }
 
+.project-comment {
+    color: var(--text-dim);
+    opacity: 0.6;
+    font-size: 0.85rem;
+    margin-left: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-style: italic;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
@@ -258,12 +308,13 @@ body, html {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
 /* Responsive Adjustments */
 @media (max-width: 900px) {
     #main-content {
         padding: 1rem;
     }
-    
+
     .terminal-container {
         height: 80vh;
     }
@@ -273,21 +324,21 @@ body, html {
     .terminal-header .title {
         display: none;
     }
-    
+
     .terminal-body {
         padding: 1rem;
         font-size: 0.85rem;
     }
-    
+
     .prompt {
         margin-right: 8px;
     }
-    
+
     /* Hide the detailed permissions on very small screens to save space */
     .project-item::before {
         content: "drw- ";
     }
-    
+
     .project-date {
         margin-right: 0.5rem;
         font-size: 0.75rem;
@@ -302,7 +353,158 @@ body, html {
     .terminal-container {
         height: 90vh;
     }
+
     .terminal-body {
         padding: 0.8rem;
     }
+}
+
+/* Cathodic Frame Effect (Large Screens) */
+@media (min-width: 1200px) {
+
+    body {
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: -36%;
+        width: 100%;
+        height: 100%;
+        background-image: url('./assets/creepy.png');
+        background-size: 100%;
+        background-position-y: 50%;
+        background-position-x: -50%;
+        background-repeat: no-repeat;
+        filter: blur(10px) grayscale(0.5);
+        /* Bokeh / Blur effect */
+        /* z-index: -1; */
+        /* transform: scale(1.1); */
+        /* Prevents white edges from blur */
+    }
+
+    #main-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        background: transparent;
+        background-color: rgba(0, 0, 0, 0);
+        opacity: 0;
+        transition: opacity 1s ease;
+    }
+
+    .cathodic-wrapper {
+        position: relative;
+        width: 1100px;
+        height: 800px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 98px;
+        padding-bottom: 50px;
+    }
+
+    .cathodic-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('assets/Cathodicframe.png') no-repeat center center;
+        background-size: contain;
+        pointer-events: none;
+        /* Allows clicking links underneath */
+        z-index: 100;
+        filter: drop-shadow(0 0 50px rgba(0, 0, 0, 0.8));
+    }
+
+    .terminal-container {
+        padding: 1rem 0.5rem 0.5rem 4.5rem;
+        width: 715px;
+        height: 520px;
+        max-width: none;
+        border-radius: 50% / 10%;
+        transform: perspective(1000px) rotateX(0.5deg) scale(1.05);
+        box-shadow:
+            inset 0 0 100px rgba(0, 0, 0, 1),
+            0 0 30px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+        border: none;
+        background: #020202;
+    }
+
+    .terminal-body {
+        padding: 4rem 5rem;
+        background: #020202;
+        filter: url(#real-fisheye);
+    }
+
+    .terminal-body::before {
+        opacity: 0.25;
+        background-size: 100% 4px, 4px 100%;
+        animation: none;
+    }
+
+    /* Moving scanline overlay */
+    .terminal-body::after {
+        content: "";
+        display: none;
+    }
+
+    /* Screen Glow Overlay */
+    .terminal-container::after {
+        display: none;
+    }
+
+    .terminal-header {
+        display: none !important;
+        /* Hidden on TV for vintage look */
+    }
+}
+
+@keyframes crt-flicker {
+    0% {
+        opacity: 0.995;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.99;
+    }
+}
+
+@keyframes scanline-move {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 0 100%;
+    }
+}
+
+@keyframes scanline-roll {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(600px);
+    }
+}
+
+.terminal-line,
+.project-item {
+    text-shadow: none;
 }

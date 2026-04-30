@@ -106,6 +106,10 @@ async function startSequence() {
     // Ligne de fermeture pour faire jolis
     await new Promise(resolve => setTimeout(resolve, 500));
     createNewLine("nathan@hub:~/www/monSite/projets/tous_les_projets$");
+
+    // Vitesse de la vidéo
+    const eyesVideo = document.getElementById('eyes-bg');
+    eyesVideo.playbackRate = 0.65;
 }
 
 document.addEventListener('DOMContentLoaded', startSequence);

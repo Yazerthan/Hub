@@ -389,10 +389,36 @@ html {
         filter: blur(4px) grayscale(0.4) opacity(0.4);
         z-index: 5;
         pointer-events: none;
-        transform: rotate(5deg);
+        transform: rotate(5deg) scale(1);
+        transition: transform 2s ease-in-out, filter 2s ease-in-out;
+    }
+
+
+    .background-video.approaching {
+        transform: rotate(5deg) scale(1.15);
+        filter: blur(3px) grayscale(0.35) opacity(0.8) brightness(1.1);
+    }
+
+
+
+    .monster-smile {
+        display: block;
+        position: fixed;
+        right: 1%;
+        top: 35%;
+        width: 250px;
+        height: auto;
+        filter: blur(2.5px) grayscale(0.4) opacity(0.6) brightness(0.5);
+        z-index: 6;
+        pointer-events: none;
+
+        transform: rotate(12deg);
+        opacity: 0;
+        transition: opacity 2s ease-in-out;
     }
 
     body::before {
+
         content: "";
         position: fixed;
         top: 0;
@@ -544,10 +570,12 @@ html {
         transform: scale(1, 1);
         filter: brightness(1);
     }
+
     40% {
         transform: scale(1, 0.005);
         filter: brightness(2);
     }
+
     100% {
         transform: scale(0, 0);
         filter: brightness(5);
@@ -575,13 +603,23 @@ html {
 }
 
 @keyframes tv-flicker {
-    0% { opacity: 0.9; }
-    50% { opacity: 1; }
-    100% { opacity: 0.95; }
+    0% {
+        opacity: 0.9;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.95;
+    }
 }
 
 @media (max-width: 1200px) {
-    .tv-off-video, .tv-off-video.visible {
+
+    .tv-off-video,
+    .tv-off-video.visible {
         display: none !important;
     }
 }

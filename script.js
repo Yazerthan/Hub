@@ -116,7 +116,59 @@ window.addEventListener('keydown', (e) => {
 
     // Scroll to bottom
     terminalBody.scrollTop = terminalBody.scrollHeight;
+
+    // Reset inactivity timer for the smile
+    resetInactivityTimer();
 });
+
+// Reset timer on mouse move or click as well
+window.addEventListener('mousemove', resetInactivityTimer);
+window.addEventListener('click', resetInactivityTimer);
+
+// Monster Smile Logic
+let inactivityTimer;
+let isSmileAuto = false;
+const smileImg = document.getElementById('monster-smile');
+const eyesImg = document.getElementById('eyes-bg');
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    // If the smile was shown because of inactivity, hide it when user acts
+    if (isSmileAuto) {
+        smileImg.style.opacity = "0";
+        eyesImg.classList.remove('approaching');
+        isSmileAuto = false;
+    }
+
+    if (window.innerWidth > 1200) {
+        inactivityTimer = setTimeout(() => showMonsterSmile(true), 30000); // 30 seconds
+    }
+}
+
+function showMonsterSmile(isAuto = false) {
+    if (window.innerWidth > 1200 && !isShuttingDown) {
+        smileImg.style.opacity = "1";
+        eyesImg.classList.add('approaching');
+
+        if (isAuto) {
+            isSmileAuto = true;
+        } else {
+            // Manual trigger (cd ../) still hides after 5s
+            setTimeout(() => {
+                if (!isSmileAuto) {
+                    smileImg.style.opacity = "0";
+                    eyesImg.classList.remove('approaching');
+                }
+            }, 5000);
+        }
+    }
+}
+
+
+// Start the timer on load
+resetInactivityTimer();
+
+
 
 let lastEnterTime = 0;
 function handleEnter() {
@@ -126,26 +178,41 @@ function handleEnter() {
 
     const command = inputBuffer.trim().toLowerCase();
 
-    if (command === "off") {
+    const forbiddenPrefixes = ['cd', 'sudo', 'apt', 'cat', 'touch', 'mkdir', 'mkfile', 'rm', 'mv', 'cp', 'chmod', 'chown', 'vi', 'nano', 'grep', 'find', 'git', 'ssh', 'top', 'pkill', 'kill'];
+    const isForbiddenCommand = (cmd) => forbiddenPrefixes.some(prefix => cmd.startsWith(prefix));
+
+    if (command === "off" || command.startsWith("shutdown")) {
         removeCursor(activeLine);
         triggerShutdown();
         return;
     }
 
+
     if (command === "ls -l" || command === "ls") {
         removeCursor(activeLine);
         displayProjects();
-    } else if (command === "cd ../" || command === "cd ..") {
+    } else if (command === "whoami") {
+        removeCursor(activeLine);
+        displayWhoAmI();
+    } else if (command === "smile") {
+        removeCursor(activeLine);
+        clearTerminal();
+        displayAsciiSmile();
+    } else if (isForbiddenCommand(command)) {
+
+
+
         removeCursor(activeLine);
         activeLine.prompt.classList.add('danger');
         const audio = new Audio('assets/monster.mp3');
         audio.volume = 0.4;
         audio.play().catch(e => console.log("Audio play blocked", e));
-
+        showMonsterSmile();
     } else {
-        // Silently fail for unknown commands or empty linescd ../
+        // Silently fail for unknown commands or empty lines
         removeCursor(activeLine);
     }
+
 
 
     inputBuffer = "";
@@ -185,6 +252,95 @@ function displayProjects() {
 
     terminalBody.appendChild(output);
 }
+
+function displayWhoAmI() {
+    const responses = [
+        "A prey...",
+        "Here, you're not the danger...",
+        "Don't try to know...",
+        "There are weird things here...",
+        "A lost soul in the machine...",
+        "Someone who should have stayed away.",
+        "Just a guest... for now.",
+        "Nothing but fresh data.",
+        "Don't try to shut me down..."
+    ];
+
+    const response = responses[Math.floor(Math.random() * responses.length)];
+
+    const output = document.createElement('div');
+    output.className = 'output-line';
+    output.style.fontStyle = 'italic';
+    output.style.color = 'var(--text-dim)';
+    output.textContent = response;
+    terminalBody.appendChild(output);
+}
+
+function clearTerminal() {
+    terminalBody.innerHTML = "";
+}
+
+function displayAsciiSmile() {
+    const faces = [
+        `
+       .ed"""" """""be.
+     .d""            ""b.
+    .d"                "b.
+   .d"  ama      ama  "b.
+  .d"  ama      ama  "b.
+  d"                  "b
+ .d"                  "b.
+ .d"  .beeeeeeeeee.   "b.
+  "b. 'beeeeeeeee'   .d"
+    "b.            .d"
+      "b.        .d"
+        "b.    .d"
+          "b..d"
+           "bd"
+        `,
+        `
+          .----------.
+         /  (o)  (o)  \\
+        /    ______    \\
+       |    /      \\    |
+       |   |        |   |
+        \\   \\______/   /
+         \\____________/
+        `,
+        `
+        # # # # # # # # # #
+        #  X         X  #
+        #       V       #
+        #   #########   #
+        #   # # # # #   #
+        # # # # # # # # # #
+        `,
+        `
+          _____________
+         /             \\
+        /  _         _  \\
+       |  / \\       / \\  |
+       |  \\_/       \\_/  |
+        \\      ___      /
+         \\    /   \\    /
+          \\___________/
+        `
+    ];
+
+    const smile = faces[Math.floor(Math.random() * faces.length)];
+
+    const pre = document.createElement('pre');
+    pre.style.color = 'var(--accent)';
+    pre.style.textShadow = '0 0 10px rgba(255, 62, 62, 0.5)';
+    pre.style.lineHeight = '1.2';
+    pre.style.margin = '2rem 0';
+    pre.style.textAlign = 'center';
+    pre.textContent = smile;
+    terminalBody.appendChild(pre);
+}
+
+
+
 
 
 

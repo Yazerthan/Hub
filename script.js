@@ -473,14 +473,14 @@ function handleKindness() {
 
 function handleWwwEscape() {
     isShuttingDown = true; // Use this to block all inputs
-    
+
     const reveal = document.getElementById('final-reveal');
     reveal.classList.add('visible');
-    
+
     // Clear terminal and show final prompt
     terminalBody.innerHTML = "";
     createNewLine("nathan@hub:~/www$");
-    
+
     console.log("Escape to WWW successful. Terminal locked.");
 }
 

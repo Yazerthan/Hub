@@ -371,7 +371,8 @@ html {
 
 /* Monster elements hidden by default (for mobile) */
 .monster-smile,
-.background-video {
+.background-video,
+.final-reveal {
     display: none;
 }
 
@@ -442,6 +443,28 @@ html {
         /* z-index: -1; */
         /* transform: scale(1.1); */
         /* Prevents white edges from blur */
+    }
+
+    .final-reveal {
+        display: block;
+        /* Show on desktop */
+        position: absolute;
+        top: 48%;
+        left: 45.5%;
+        transform: translate(-50%, -50%);
+        width: 715px;
+        height: 520px;
+        object-fit: cover;
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 3.5s ease-in-out;
+        filter: grayscale(0.15) contrast(1.1) brightness(0.9);
+        border-radius: 20% / 10%;
+    }
+
+    .final-reveal.visible {
+        opacity: 1;
     }
 
     #main-content {
@@ -670,24 +693,7 @@ html {
     transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.final-reveal {
-    position: absolute;
-    top: 48%;
-    left: 45.5%;
-    transform: translate(-50%, -50%);
-    width: 715px;
-    height: 520px;
-    object-fit: cover;
-    z-index: 50;
-    /* Above terminal (maybe), but below cathodic frame (100) */
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 3.5s ease-in-out;
-    filter: grayscale(0.15) contrast(1.1) brightness(0.9);
-    border-radius: 20% / 10%;
-    /* Subtle curvature to match CRT bulge */
-}
-
-.final-reveal.visible {
-    opacity: 1;
+.cathodic-wrapper.tilted {
+    transform: rotate(-3deg) translateY(20px);
+    transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

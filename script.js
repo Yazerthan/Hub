@@ -35,8 +35,9 @@ function createNewLine(promptText = "nathan@hub:~$") {
     line.appendChild(cursor);
 
     terminalBody.appendChild(line);
-    return { line, command, cursor };
+    return { line, prompt, command, cursor };
 }
+
 
 function removeCursor(lineObj) {
     if (lineObj.cursor) {
@@ -71,6 +72,89 @@ async function startSequence() {
     removeCursor(secondLine);
 
     // Affichage de la liste des projets
+    displayProjects();
+
+
+    // Ligne de fermeture pour faire jolis
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const lastLine = createNewLine("nathan@hub:~/www/monSite/projets/tous_les_projets$");
+    activeLine = lastLine;
+
+    // Vitesse de la vidéo
+    const eyesVideo = document.getElementById('eyes-bg');
+    eyesVideo.playbackRate = 0.65;
+}
+
+
+document.addEventListener('DOMContentLoaded', startSequence);
+
+// Easter Egg: Shutdown terminal when typing "off"
+let inputBuffer = "";
+let isShuttingDown = false;
+let activeLine = null;
+
+window.addEventListener('keydown', (e) => {
+    if (isShuttingDown || !activeLine) return;
+
+    // Prevent scrolling or browser navigation with specific keys
+    if (e.key === "Backspace" || e.key === "Enter") {
+        e.preventDefault();
+    }
+
+    // Only consider single characters (letters, numbers, etc)
+    if (e.key.length === 1 && inputBuffer.length < 50) {
+        inputBuffer += e.key;
+        activeLine.command.textContent = inputBuffer;
+    } else if (e.key === "Backspace") {
+
+
+        inputBuffer = inputBuffer.slice(0, -1);
+        activeLine.command.textContent = inputBuffer;
+    } else if (e.key === "Enter") {
+        handleEnter();
+    }
+
+    // Scroll to bottom
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+});
+
+let lastEnterTime = 0;
+function handleEnter() {
+    const now = Date.now();
+    if (now - lastEnterTime < 100) return; // Basic anti-spam
+    lastEnterTime = now;
+
+    const command = inputBuffer.trim().toLowerCase();
+
+    if (command === "off") {
+        removeCursor(activeLine);
+        triggerShutdown();
+        return;
+    }
+
+    if (command === "ls -l" || command === "ls") {
+        removeCursor(activeLine);
+        displayProjects();
+    } else if (command === "cd ../" || command === "cd ..") {
+        removeCursor(activeLine);
+        activeLine.prompt.classList.add('danger');
+        const audio = new Audio('assets/monster.mp3');
+        audio.volume = 0.4;
+        audio.play().catch(e => console.log("Audio play blocked", e));
+
+    } else {
+        // Silently fail for unknown commands or empty linescd ../
+        removeCursor(activeLine);
+    }
+
+
+    inputBuffer = "";
+    activeLine = createNewLine("nathan@hub:~/www/monSite/projets/tous_les_projets$");
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+}
+
+
+function displayProjects() {
     const output = document.createElement('div');
     output.className = 'project-list';
 
@@ -79,7 +163,6 @@ async function startSequence() {
         item.href = project.url;
         item.className = 'project-item';
 
-        // Clear item content and rebuild to control order
         const dateSpan = document.createElement('span');
         dateSpan.className = 'project-date';
         dateSpan.textContent = project.date;
@@ -92,7 +175,6 @@ async function startSequence() {
 
         output.appendChild(item);
 
-        // Add comment if it exists
         if (project.comment) {
             const commentLine = document.createElement('div');
             commentLine.className = 'project-comment';
@@ -102,14 +184,49 @@ async function startSequence() {
     });
 
     terminalBody.appendChild(output);
-
-    // Ligne de fermeture pour faire jolis
-    await new Promise(resolve => setTimeout(resolve, 500));
-    createNewLine("nathan@hub:~/www/monSite/projets/tous_les_projets$");
-
-    // Vitesse de la vidéo
-    const eyesVideo = document.getElementById('eyes-bg');
-    eyesVideo.playbackRate = 0.65;
 }
 
-document.addEventListener('DOMContentLoaded', startSequence);
+
+
+async function triggerShutdown() {
+
+    if (isShuttingDown) return;
+    isShuttingDown = true;
+
+    const terminalBody = document.getElementById('terminal-body');
+    const container = document.querySelector('.terminal-container');
+
+    // Play singing sound
+    const singing = new Audio('assets/girl_singing.mp3');
+    singing.loop = true;
+    singing.play().catch(e => console.log("Audio play blocked", e));
+
+
+    // Add a new line with the "Bye" message
+
+    const byeLine = document.createElement('div');
+    byeLine.className = 'terminal-line';
+    byeLine.style.fontWeight = "bold";
+    byeLine.style.marginTop = "1rem";
+    byeLine.textContent = "Bye.";
+    terminalBody.appendChild(byeLine);
+
+    // Scroll to bottom
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+
+    // Wait a bit so the user can see the message (increased delay)
+    await new Promise(resolve => setTimeout(resolve, 1800));
+
+    // Start the CSS animation
+    container.classList.add('shutdown');
+
+    // Show TV off video after terminal shrinks (only for desktop)
+    setTimeout(() => {
+        if (window.innerWidth > 1200) {
+            const tvOffVideo = document.getElementById('tv-off-video');
+            tvOffVideo.classList.add('visible');
+            tvOffVideo.play().catch(e => console.log("TV Off Video play blocked", e));
+        }
+    }, 600); // 600ms matches the crt-off animation duration
+}
+

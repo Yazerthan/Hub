@@ -223,7 +223,13 @@ html {
     color: var(--text-primary);
 }
 
+.prompt.danger {
+    color: #ff3e3e !important;
+    text-shadow: 0 0 10px rgba(255, 62, 62, 0.5);
+}
+
 .cursor {
+
     display: inline-block;
     width: 8px;
     height: 18px;
@@ -525,4 +531,57 @@ html {
 .terminal-line,
 .project-item {
     text-shadow: none;
+}
+
+/* Shutdown Effect */
+.terminal-container.shutdown {
+    animation: crt-off 0.6s forwards cubic-bezier(0.19, 1, 0.22, 1);
+    pointer-events: none;
+}
+
+@keyframes crt-off {
+    0% {
+        transform: scale(1, 1);
+        filter: brightness(1);
+    }
+    40% {
+        transform: scale(1, 0.005);
+        filter: brightness(2);
+    }
+    100% {
+        transform: scale(0, 0);
+        filter: brightness(5);
+        opacity: 0;
+    }
+}
+
+/* TV Off Video */
+.tv-off-video {
+    position: absolute;
+    width: 715px;
+    height: 520px;
+    object-fit: cover;
+    display: none;
+    z-index: 50;
+    pointer-events: none;
+    border-radius: 50% / 10%;
+    transform: perspective(1000px) rotateX(0.5deg) scale(1.05);
+    filter: grayscale(0.4) brightness(0.8) blur(0.5px);
+}
+
+.tv-off-video.visible {
+    display: block;
+    animation: tv-flicker 0.2s infinite;
+}
+
+@keyframes tv-flicker {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.95; }
+}
+
+@media (max-width: 1200px) {
+    .tv-off-video, .tv-off-video.visible {
+        display: none !important;
+    }
 }

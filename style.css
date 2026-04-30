@@ -369,7 +369,14 @@ html {
     }
 }
 
+/* Monster elements hidden by default (for mobile) */
+.monster-smile,
+.background-video {
+    display: none;
+}
+
 /* Cathodic Frame Effect (Large Screens) */
+
 @media (min-width: 1200px) {
 
     body {
@@ -459,6 +466,7 @@ html {
         align-items: center;
         padding-left: 98px;
         padding-bottom: 50px;
+        z-index: 40;
     }
 
     .cathodic-frame {
@@ -645,7 +653,7 @@ html {
     color: #2563eb !important;
 }
 
-.light-mode .command, 
+.light-mode .command,
 .light-mode .output-line,
 .light-mode .project-item::before,
 .light-mode .project-date,
@@ -660,4 +668,26 @@ html {
 .cathodic-wrapper.tilted {
     transform: rotate(-3deg) translateY(20px);
     transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.final-reveal {
+    position: absolute;
+    top: 48%;
+    left: 45.5%;
+    transform: translate(-50%, -50%);
+    width: 715px;
+    height: 520px;
+    object-fit: cover;
+    z-index: 50;
+    /* Above terminal (maybe), but below cathodic frame (100) */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 3.5s ease-in-out;
+    filter: grayscale(0.15) contrast(1.1) brightness(0.9);
+    border-radius: 20% / 10%;
+    /* Subtle curvature to match CRT bulge */
+}
+
+.final-reveal.visible {
+    opacity: 1;
 }

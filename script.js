@@ -219,7 +219,12 @@ function handleEnter() {
     } else if (command.includes('?') && command.includes('help')) {
         removeCursor(activeLine);
         triggerFake404();
+    } else if (isLightMode && /^sudo cd (\.\.\/){2,}/.test(command)) {
+        removeCursor(activeLine);
+        handleWwwEscape();
+        return;
     } else if (isKindnessCommand(command)) {
+
         removeCursor(activeLine);
         handleKindness();
     } else if (isForbiddenCommand(command) && !isLightMode) {
@@ -465,6 +470,20 @@ function handleKindness() {
     output.textContent = "You seem to be different of them...";
     terminalBody.appendChild(output);
 }
+
+function handleWwwEscape() {
+    isShuttingDown = true; // Use this to block all inputs
+    
+    const reveal = document.getElementById('final-reveal');
+    reveal.classList.add('visible');
+    
+    // Clear terminal and show final prompt
+    terminalBody.innerHTML = "";
+    createNewLine("nathan@hub:~/www$");
+    
+    console.log("Escape to WWW successful. Terminal locked.");
+}
+
 
 
 

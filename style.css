@@ -456,7 +456,7 @@ html {
         overflow: hidden;
         border: none;
         background: #020202;
-        filter: grayscale(0.5) blur(0.65px);
+        filter: grayscale(0.25) blur(0.65px);
     }
 
     .terminal-body {

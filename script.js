@@ -128,6 +128,7 @@ window.addEventListener('click', resetInactivityTimer);
 // Monster Smile Logic
 let inactivityTimer;
 let isSmileAuto = false;
+let isMonsterHidden = false;
 const smileImg = document.getElementById('monster-smile');
 const eyesImg = document.getElementById('eyes-bg');
 
@@ -135,18 +136,20 @@ function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     // If the smile was shown because of inactivity, hide it when user acts
     if (isSmileAuto) {
-        smileImg.style.opacity = "0";
-        eyesImg.classList.remove('approaching');
+        if (!isMonsterHidden) {
+            smileImg.style.opacity = "0";
+            eyesImg.classList.remove('approaching');
+        }
         isSmileAuto = false;
     }
 
-    if (window.innerWidth > 1200) {
+    if (window.innerWidth > 1200 && !isMonsterHidden) {
         inactivityTimer = setTimeout(() => showMonsterSmile(true), 30000); // 30 seconds
     }
 }
 
 function showMonsterSmile(isAuto = false) {
-    if (window.innerWidth > 1200 && !isShuttingDown) {
+    if (window.innerWidth > 1200 && !isShuttingDown && !isMonsterHidden) {
         smileImg.style.opacity = "1";
         eyesImg.classList.add('approaching');
 
@@ -198,13 +201,17 @@ function handleEnter() {
         removeCursor(activeLine);
         clearTerminal();
         displayAsciiSmile();
+    } else if (command.includes('?') && (command.includes('sad') || command.includes('lonely') || command.includes('alone'))) {
+        removeCursor(activeLine);
+        handleSadCommand();
     } else if (isForbiddenCommand(command)) {
+
 
 
 
         removeCursor(activeLine);
         activeLine.prompt.classList.add('danger');
-        const audio = new Audio('assets/monster.mp3');
+        const audio = new Audio('./assets/monster.mp3');
         audio.volume = 0.4;
         audio.play().catch(e => console.log("Audio play blocked", e));
         showMonsterSmile();
@@ -338,6 +345,35 @@ function displayAsciiSmile() {
     pre.textContent = smile;
     terminalBody.appendChild(pre);
 }
+
+function handleSadCommand() {
+    isMonsterHidden = true;
+
+    // Hide visual elements
+    eyesImg.classList.add('monster-gone');
+    smileImg.classList.add('monster-gone');
+
+    // Play random sad sound
+    const rand = Math.floor(Math.random() * 3) + 1;
+    const audio = new Audio(`assets/sad${rand}.mp3`);
+    audio.play().catch(e => console.log("Audio play blocked", e));
+
+    const output = document.createElement('div');
+    output.className = 'output-line';
+    output.style.fontStyle = 'italic';
+    output.style.color = 'var(--text-dim)';
+    output.textContent = "...";
+    terminalBody.appendChild(output);
+
+    // Bring monster back after 1 minute
+    setTimeout(() => {
+        isMonsterHidden = false;
+        eyesImg.classList.remove('monster-gone');
+        smileImg.classList.remove('monster-gone');
+        resetInactivityTimer();
+    }, 60000);
+}
+
 
 
 

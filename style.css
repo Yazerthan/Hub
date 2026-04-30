@@ -623,3 +623,8 @@ html {
         display: none !important;
     }
 }
+
+.monster-gone {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}

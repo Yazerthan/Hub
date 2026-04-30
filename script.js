@@ -129,7 +129,9 @@ window.addEventListener('click', resetInactivityTimer);
 let inactivityTimer;
 let isSmileAuto = false;
 let isMonsterHidden = false;
+let isLightMode = false;
 const smileImg = document.getElementById('monster-smile');
+
 const eyesImg = document.getElementById('eyes-bg');
 
 function resetInactivityTimer() {
@@ -220,7 +222,8 @@ function handleEnter() {
     } else if (isKindnessCommand(command)) {
         removeCursor(activeLine);
         handleKindness();
-    } else if (isForbiddenCommand(command)) {
+    } else if (isForbiddenCommand(command) && !isLightMode) {
+
 
 
 
@@ -279,7 +282,23 @@ function displayProjects() {
 }
 
 function displayWhoAmI() {
+    if (isLightMode) {
+        const output = document.createElement('div');
+        output.className = 'output-line';
+        output.style.fontStyle = 'italic';
+        output.style.color = '#2563eb';
+
+        let text = "...";
+        if (Math.random() < 0.33) {
+            text += "\nfriend...";
+        }
+        output.textContent = text;
+        terminalBody.appendChild(output);
+        return;
+    }
+
     const responses = [
+
         "A prey...",
         "Here, you're not the danger...",
         "Don't try to know...",
@@ -306,7 +325,45 @@ function clearTerminal() {
 }
 
 function displayAsciiSmile() {
+    if (isLightMode) {
+        const sadFace = `
+           .ed"""" """""be.
+            .d""            ""b.
+        .d"                "b.
+      .d"  / \\        / \\  "b.
+      .d"  /   \\      /   \\  "b.
+     d"   \\___/      \\___/   "b
+      .d"                      "b.
+    .d"                       "b.
+    .d"    ________________    "b.
+     d"   /                \\   "b
+    "b.  \\________________/  .d"
+     "b.                   .d"
+       "b.                 .d"
+        `;
+
+        const pre = document.createElement('pre');
+        pre.style.color = '#2563eb';
+        pre.style.textShadow = '0 0 10px rgba(37, 99, 235, 0.2)';
+        pre.style.lineHeight = '1.2';
+        pre.style.margin = '2rem 0';
+        pre.style.textAlign = 'center';
+        pre.textContent = sadFace;
+        terminalBody.appendChild(pre);
+
+        const story = document.createElement('div');
+        story.className = 'output-line';
+        story.style.fontStyle = 'italic';
+        story.style.color = 'var(--text-dim)';
+        story.style.textAlign = 'center';
+        story.style.marginTop = '1rem';
+        story.textContent = "I used to smile... before the silence fell. Everything was so bright back then.";
+        terminalBody.appendChild(story);
+        return;
+    }
+
     const faces = [
+
         `
        .ed"""" """""be.
      .d""            ""b.
@@ -396,8 +453,10 @@ function handleKindness() {
     const container = document.querySelector('.terminal-container');
     const wrapper = document.querySelector('.cathodic-wrapper');
 
+    isLightMode = true;
     container.classList.add('light-mode');
     wrapper.classList.add('tilted');
+
 
     const output = document.createElement('div');
     output.className = 'output-line';

@@ -628,3 +628,36 @@ html {
     opacity: 0 !important;
     pointer-events: none !important;
 }
+
+/* Light Mode & Kindness */
+.light-mode {
+    background: #fdfdfd !important;
+    color: #1a1a1a !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 25px 50px -12px rgba(255, 255, 255, 0.3) !important;
+}
+
+.light-mode .terminal-body {
+    background: #fdfdfd !important;
+}
+
+.light-mode .prompt {
+    color: #2563eb !important;
+}
+
+.light-mode .command, 
+.light-mode .output-line,
+.light-mode .project-item::before,
+.light-mode .project-date,
+.light-mode .project-comment {
+    color: #4b5563 !important;
+}
+
+.light-mode .cursor {
+    background: #1a1a1a !important;
+}
+
+.cathodic-wrapper.tilted {
+    transform: rotate(-3deg) translateY(20px);
+    transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

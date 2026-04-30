@@ -184,7 +184,17 @@ function handleEnter() {
     const forbiddenPrefixes = ['cd', 'sudo', 'apt', 'cat', 'touch', 'mkdir', 'mkfile', 'rm', 'mv', 'cp', 'chmod', 'chown', 'vi', 'nano', 'grep', 'find', 'git', 'ssh', 'top', 'pkill', 'kill'];
     const isForbiddenCommand = (cmd) => forbiddenPrefixes.some(prefix => cmd.startsWith(prefix));
 
+    const isKindnessCommand = (cmd) => {
+        const phrases = [
+            /it'?s not your fault/i,
+            /i love (u|you)/i,
+            /you('?re| are| aren'?t) (not a|no) monster/i
+        ];
+        return phrases.some(regex => regex.test(cmd));
+    };
+
     if (command === "off" || command.startsWith("shutdown")) {
+
         removeCursor(activeLine);
         triggerShutdown();
         return;
@@ -207,7 +217,11 @@ function handleEnter() {
     } else if (command.includes('?') && command.includes('help')) {
         removeCursor(activeLine);
         triggerFake404();
+    } else if (isKindnessCommand(command)) {
+        removeCursor(activeLine);
+        handleKindness();
     } else if (isForbiddenCommand(command)) {
+
 
 
 
@@ -377,6 +391,22 @@ function handleSadCommand() {
         resetInactivityTimer();
     }, 60000);
 }
+
+function handleKindness() {
+    const container = document.querySelector('.terminal-container');
+    const wrapper = document.querySelector('.cathodic-wrapper');
+
+    container.classList.add('light-mode');
+    wrapper.classList.add('tilted');
+
+    const output = document.createElement('div');
+    output.className = 'output-line';
+    output.style.fontStyle = 'italic';
+    output.style.color = '#2563eb';
+    output.textContent = "You seem to be different of them...";
+    terminalBody.appendChild(output);
+}
+
 
 
 

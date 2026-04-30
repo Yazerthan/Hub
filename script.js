@@ -204,7 +204,11 @@ function handleEnter() {
     } else if (command.includes('?') && (command.includes('sad') || command.includes('lonely') || command.includes('alone'))) {
         removeCursor(activeLine);
         handleSadCommand();
+    } else if (command.includes('?') && command.includes('help')) {
+        removeCursor(activeLine);
+        triggerFake404();
     } else if (isForbiddenCommand(command)) {
+
 
 
 
@@ -378,6 +382,13 @@ function handleSadCommand() {
 
 
 
+
+
+function triggerFake404() {
+    // We redirect to a non-existent page to trigger a real 404 or at least a browser error
+    // which feels more "broken" than a custom 404 in this context.
+    window.location.href = "/404-help-not-found-for-prey";
+}
 
 
 async function triggerShutdown() {
